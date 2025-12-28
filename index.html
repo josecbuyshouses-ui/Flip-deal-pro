@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Flip Deal Pro Calculator</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+/* Fonts & Reset */
+body, html { margin:0; padding:0; font-family: 'Segoe UI', sans-serif; background:#0f2027; color:#fff; }
+h1 { text-align:center; padding:20px; font-size:2rem; text-shadow:1px 1px 5px #000; }
+.container { max-width: 900px; margin:auto; padding:20px; }
+
+/* Cards */
+.card { background: rgba(255,255,255,0.1); border-radius:15px; padding:20px; margin-bottom:20px; box-shadow:0 8px 20px rgba(0,0,0,0.3); backdrop-filter: blur(5px); }
+label { font-weight:bold; display:block; margin-top:10px; text-shadow:0 1px 2px rgba(0,0,0,0.5);}
+input[type=number], input[type=range] { width:100%; margin:5px 0; border-radius:8px; border:none; padding:8px; background: rgba(255,255,255,0.3); color:#fff; }
+input[type=range]::-webkit-slider-thumb { background:#ff9800; cursor:pointer; border-radius:50%; }
+input[type=range]::-moz-range-thumb { background:#ff9800; cursor:pointer; border-radius:50%; }
+
+button { width:100%; background:#ff7f50; color:#fff; font-size:1.2rem; padding:12px; border:none; border-radius:10px; cursor:pointer; margin-top:10px; box-shadow:0 5px 15px rgba(0,0,0,0.3);}
+button:hover { background:#ff4500; }
+
+.output-section { background: rgba(0,0,0,0.3); padding:15px; border-radius:10px; font-weight:bold; margin-top:10px; }
+canvas { max-width:100%; margin-top:20px; }
+
+/* Responsive */
+@media (max-width:600px){ .container{padding:10px;} h1{font-size:1.5rem;} }
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1>Flip Deal Pro Calculator</h1>
+
+<div class="card">
+<h3>Inputs</h3>
+
+<label>ARV / Market Price ($)</label>
+<input id="marketPrice" type="number" value="250000" />
+
+<label>% of Market Value</label>
+<input id="percentValue" type="range" min="80" max="120" value="100" oninput="document.getElementById('percentValDisplay').innerText = this.value + '%';">
+<span id="percentValDisplay">100%</span>
+
+<label>Realtor Fee %</label>
+<input id="realtorFee" type="range" min="1" max="10" value="4.25" step="0.25" oninput="document.getElementById('realtorValDisplay').innerText=this.value+'%'">
+<span id="realtorValDisplay">4.25%</span>
+
+<label>Buy Closing %</label>
+<input id="closingFront" type="range" min="0" max="5" value="1.5" step="0.1" oninput="document.getElementById('buyClosingDisplay').innerText=this.value+'%'">
+<span id="buyClosingDisplay">1.5%</span>
+
+<label>Sell Closing %</label>
+<input id="closingBack" type="range" min="0" max="5" value="2" step="0.1" oninput="document.getElementById('sellClosingDisplay').innerText=this.value+'%'">
+<span id="sellClosingDisplay">2%</span>
+
+<label>Title Insurance ($)</label>
+<input id="titleInsurance" type="number" value="0" />
+
+<label>E‑File Fee ($)</label>
+<input id="efileFee" type="number" value="35" />
+
+<label>Recording Fee ($)</label>
+<input id="recordingFee" type="number" value="25" />
+
+<label>State Tax ($)</label>
+<input id="stateTax" type="number" value="200" />
+
+<label>Other Costs ($)</label>
+<input id="otherExpenses" type="number" value="200" />
+
+<label>Repairs ($)</label>
+<input id="repairs" type="number" value="40000" />
+
+<label>Interest / Holding ($)</label>
+<input id="interest" type="number" value="13475" />
+
+<label>Months Held</label>
+<input id="monthsHeld" type="number" value="6" />
+
+<button onclick="computeResults()">Calculate</button>
+</div>
+
+<div class="card output-section" id="results"></div>
+
+<div class="card">
+<h3>Charts</h3>
+<canvas id="profitChart" height="200"></canvas>
+<canvas id="costChart" height="200"></canvas>
+</div>
+</div>
+
+<script>
+let profitChart, costChart;
+
+function computeResults(){
+const mp=parseFloat(document.getElementById("marketPrice").value);
+const pv=parseFloat(document.getElementById("percentValue").value)/100;
+const rf=parseFloat(document.getElementById("realtorFee").value)/100;
+const cf=parseFloat(document.getElementById("closingFront").value)/100;
+const cb=parseFloat(document.getElementById("closingBack").value)/100;
+const ti=parseFloat(document.getElementById("titleInsurance").value);
+const ef=parseFloat(document.getElementById("efileFee").value);
+const rr=parseFloat(document.getElementById("recordingFee").value);
+const st=parseFloat(document.getElementById("stateTax").value);
+const oe=parseFloat(document.getElementById("otherExpenses").value);
+const rep=parseFloat(document.getElementById("repairs").value);
+const intCost=parseFloat(document.getElementById("interest").value);
+const months=parseFloat(document.getElementById("monthsHeld").value);
+
+const salePrice=mp*pv;
+const realtorCost=salePrice*rf;
+const closingBuy=salePrice*cf;
+const closingSell=sale
